@@ -1,131 +1,33 @@
-from bitarray import bitarray
+with open("dane.txt") as file:
+    data = file.read().split("\n")
 
-#zad 1
-seed = 2;
-prev_generated = seed;
-def mult_generator(a, c, M):
-    global prev_generated
-    generated = (a * prev_generated + c) % M
-    prev_generated = generated
-    return generated / M
+lst = [float(i.replace(",",".")) for i in data]
+print(lst)
 
+def ord_mom1(lst):
+    ex_1 = sum(lst)/len(lst)
+    print("Moment zwykły rzędu 1: ", ex_1)
 
-N = 10000
-a = 69069
-c = 1
-M = pow(2, 32)
+def ord_mom2(lst):
+    ex_2 = sum([i**2 for i in lst])/len(lst)
+    print("Moment zwykły rzędu 2: ",ex_2)
 
-all_generated = []
-for i in range(N):
-    num = mult_generator(a, c, M)
-    all_generated.append(num)
+def cen_mom1(lst):
+    mean = sum(lst)/len(lst)
+    print("mean: ", mean)
+    ex_3 = sum([(i - mean) for i in lst]) / len(lst)
+    print("Moment centralny rzędu 1: ",ex_3)
 
-for i in range(100):
-    print(all_generated[i])
+def cen_mom2(lst):
+    mean = sum(lst) / len(lst)
+    ex_4 = sum([(i - mean)**2 for i in lst]) / len(lst)
+    print("Moment centralny rzędu 2: ", ex_4)
 
-in_015 = 0
-for n in all_generated:
-    if(n < 0.15):
-        in_015 = in_015 + 1
+def std(lst):
+    ex_5 = cen_mom2(lst)**(0.5)
+    print("Odchylenie standardowe: ", ex_5)
 
-print("Sprawdzenie: ", in_015 / N)
-
-#zad 2
-#N liczb ze zbioru 0_1
-
-seed = [1,0,0,1,1,0,1,0,0,1,0]
-arr = bitarray(seed)
-#print(arr)
-curr_index = 11
-
-def register_generator(p, q):
-    global curr_index
-    generated = arr[curr_index - p] != arr[curr_index - q]
-    arr.append(generated)
-    curr_index = curr_index + 1
-    return arr[curr_index - 1]
-
-N=1000
-
-zeros_num = 0
-for i in range(100):
-    p = 10
-    q = 3
-    result = register_generator(p, q)
-    print(result)
-
-for i in range(N):
-    p = 10
-    q = 3
-    result = register_generator(p, q)
-    if result == 0:
-        zeros_num = zeros_num + 1
-
-print("Sprawdzenie: ", zeros_num/N)
-
-
-#Zad 1.d
-print("Dodatki:")
-def is_in_circle_middle(x,y):
-    return pow(pow(x,2) + pow(y,2), 1/2.0) <= 1
-
-def is_in_circle_vert(x,y, R):
-    return pow(pow(x-1,2) + pow(y-1,2), 1/2.0) <= R
-
-a = 69069
-c = 1
-M = pow(2, 32)
-N = 100000
-in_area = 0
-R=1
-for i in range(N):
-    x = mult_generator(a, c, M) * 2 - 1
-    y = mult_generator(a, c, M) * 2 - 1
-    #print(x, y)
-    if is_in_circle_vert(x,y,R) and is_in_circle_middle(x,y):
-        in_area = in_area+1
-
-print("Dodatek 1: ",(in_area/N) * 4)
-    #print(is_in_circle_middle(x,y))
-    #print(is_in_circle_vert(x,y,1))
-
-
-#zad2.d
-
-def gen_seq(N):
-    p = 10
-    q = 3
-    res = []
-    for i in range(N):
-        res.append(register_generator(p, q))
-    return res
-
-def check_for_k(K, seq):
-    ks = 0
-    for i in range(len(seq)):
-        if ks == K:
-            return True
-        if seq[i] == 1:
-            ks = ks + 1
-        else:
-            ks = 0
-    return False
-
-
-N=10000
-positive = 0
-for i in range(N):
-    seq = gen_seq(20)
-    #print(seq)
-    if check_for_k(5, seq) == True:
-        positive = positive + 1
-
-print("Dodatek 2: ", positive/N)
-
-
-
-
-
-
-
-
+def avg_dev(lst):
+    mean = sum(lst) / len(lst)
+    ex_6 = sum([abs(i - mean) for i in lst]) / len(lst)
+    print("Odchylenie przeciętne: ", ex_6)
